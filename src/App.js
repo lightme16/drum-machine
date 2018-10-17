@@ -10,6 +10,9 @@ import snore1 from './samples/snore1.wav';
 import snore2 from './samples/snore2.wav';
 import tamp from './samples/tamp.wav';
 
+import { Provider, connect } from 'react-redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+
 const keyCodes = {
     '81': 'Q',
     '87': 'W',
@@ -22,11 +25,31 @@ const keyCodes = {
     '67': 'C'
 };
 
+const KEYPRESS = 'key_press';
+
+const keyPressed = (keyCode) => {
+    return {
+        type: KEYPRESS,
+        keyCode
+    }
+};
+
+const messageReducer = (state = {}, action) => {
+    switch (action.type) {
+        case KEYPRESS:
+            return;
+        default:
+            return;
+    }
+};
+const store = createStore(messageReducer);
+
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
+
     handleDrumClick = (ev) => {
         let id = ev.target.firstChild.textContent;
         if (id)
@@ -48,7 +71,7 @@ class App extends Component {
     };
 
     componentDidMount = () => {
-      document.onkeydown = this.checkKey;
+        document.onkeydown = this.checkKey;
     };
 
     render() {
@@ -100,5 +123,31 @@ class App extends Component {
         );
     }
 }
+
+
+const mapStateToProps = (state) => {
+    return {}
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        keyPressed: (keyCode) => {
+            return dispatch(keyPressed(keyCode))
+        }
+    }
+};
+
+const Container = connect(mapStateToProps, mapDispatchToProps)(App);
+
+class AppWrapper extends React.Component {
+    render() {
+        return (
+            <Provider store={store}>
+                <Container/>
+            </Provider>
+        );
+    }
+};
+
 
 export default App;
