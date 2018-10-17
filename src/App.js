@@ -10,8 +10,8 @@ import snore1 from './samples/snore1.wav';
 import snore2 from './samples/snore2.wav';
 import tamp from './samples/tamp.wav';
 
-import { Provider, connect } from 'react-redux'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import {Provider, connect} from 'react-redux'
+import {createStore} from 'redux'
 
 const keyCodes = {
     '81': 'Q',
@@ -25,48 +25,75 @@ const keyCodes = {
     '67': 'C'
 };
 
-const KEYPRESS = 'key_press';
 
-const keyPressed = (keyCode) => {
+const keys2Names = {
+    'Q': 'Closed Hat 1',
+    'W': 'Kick 1',
+    'E': 'Kick 2',
+    'A': 'Open hat',
+    'S': 'Shrk 1',
+    'D': 'Shrk 2',
+    'Z': 'Snore 1',
+    'X': 'Snore 2',
+    'C': 'Tump'
+};
+
+
+const PLAYDRUM = 'play_drum';
+const DISPLAYDRUM = 'display_drum';
+
+const playDrumMsg = (drumCode) => {
     return {
-        type: KEYPRESS,
-        keyCode
+        type: PLAYDRUM,
+        drumCode
+    }
+};
+const displayDrumMsg = (drumName) => {
+    return {
+        type: DISPLAYDRUM,
+        drumName
     }
 };
 
-const messageReducer = (state = {}, action) => {
+const playAudio = (id) => {
+    let audio = document.getElementById(id);
+    audio.play();
+};
+
+const defaultState = {drumDisplay: ''};
+
+const messageReducer = (state = defaultState, action) => {
     switch (action.type) {
-        case KEYPRESS:
-            return;
+        case DISPLAYDRUM:
+            return Object.assign({}, state, {drumDisplay: action.drumName});
+        case PLAYDRUM:
+            playAudio(action.drumCode);
+            break;
         default:
-            return;
+            break;
     }
+    return state;
 };
 const store = createStore(messageReducer);
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
     }
 
     handleDrumClick = (ev) => {
-        let id = ev.target.firstChild.textContent;
-        if (id)
-            this.playAudio(id)
+        let code = ev.target.firstChild.textContent;
+        if (code)
+            this.props.playDrum(code);
     };
 
-    playAudio = (id) => {
-        let audio = document.getElementById(id);
-        audio.play();
-    };
 
     checkKey = (e) => {
         e = e || window.event;
 
-        let id = keyCodes[e.keyCode];
-        if (id)
-            this.playAudio(id);
+        let code = keyCodes[e.keyCode];
+        if (code)
+            this.props.playDrum(code);
 
     };
 
@@ -74,48 +101,50 @@ class App extends Component {
         document.onkeydown = this.checkKey;
     };
 
+
     render() {
         return (
             <div className='App'>
                 <div id="drum-machine">
                     <div id="display">
-                        <div className='drum-pads'>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                Q
-                                <audio className='clip' id='Q' src={closed_hat2}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                W
-                                <audio className='clip' id='W' src={kick2}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                E
-                                <audio className='clip' id='E' src={kick3}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                A
-                                <audio className='clip' id='A' src={open_hat}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                S
-                                <audio className='clip' id='S' src={shkr1}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                D
-                                <audio className='clip' id='D' src={shkr3}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                Z
-                                <audio className='clip' id='Z' src={snore1}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                X
-                                <audio className='clip' id='X' src={snore2}/>
-                            </div>
-                            <div className='drum-pad' onClick={this.handleDrumClick}>
-                                C
-                                <audio className='clip' id='C' src={tamp}/>
-                            </div>
+                        <h2>{this.props.state.drumDisplay}</h2>
+                    </div>
+                    <div className='drum-pads'>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            Q
+                            <audio className='clip' id='Q' src={closed_hat2}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            W
+                            <audio className='clip' id='W' src={kick2}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            E
+                            <audio className='clip' id='E' src={kick3}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            A
+                            <audio className='clip' id='A' src={open_hat}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            S
+                            <audio className='clip' id='S' src={shkr1}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            D
+                            <audio className='clip' id='D' src={shkr3}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            Z
+                            <audio className='clip' id='Z' src={snore1}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            X
+                            <audio className='clip' id='X' src={snore2}/>
+                        </div>
+                        <div className='drum-pad' onClick={this.handleDrumClick}>
+                            C
+                            <audio className='clip' id='C' src={tamp}/>
                         </div>
                     </div>
                 </div>
@@ -126,13 +155,16 @@ class App extends Component {
 
 
 const mapStateToProps = (state) => {
-    return {}
+    return {state}
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        keyPressed: (keyCode) => {
-            return dispatch(keyPressed(keyCode))
+        playDrum: (drumCode) => {
+            dispatch(playDrumMsg(drumCode));
+            let drumName = keys2Names[drumCode];
+            if (drumName)
+                dispatch(displayDrumMsg(drumName))
         }
     }
 };
@@ -150,4 +182,4 @@ class AppWrapper extends React.Component {
 };
 
 
-export default App;
+export default AppWrapper;

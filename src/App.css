@@ -6,6 +6,10 @@
   color: #61dafb;
 }
 
+#display {
+    border-style: solid;
+    height: 100px;
+}
 
 .drum-pads {
     display: grid;
