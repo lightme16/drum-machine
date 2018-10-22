@@ -9,6 +9,7 @@ import shkr3 from './samples/shkr3.wav';
 import snore1 from './samples/snore1.wav';
 import snore2 from './samples/snore2.wav';
 import tamp from './samples/tamp.wav';
+import metronome from './samples/metronome_tick.wav';
 
 import {Provider, connect} from 'react-redux'
 import {createStore} from 'redux'
@@ -77,6 +78,52 @@ const messageReducer = (state = defaultState, action) => {
     return state;
 };
 const store = createStore(messageReducer);
+
+class Metronome extends Component {
+    constructor(props) {
+        super(props);
+        this.metroIterval = null;
+        this.state = {
+            enabled: false,
+            bpm: 'disabled'
+        }
+    }
+
+    changeMetroPace = (ev) => {
+        clearInterval(this.metroIterval);
+
+        let bpm = ev.target.value;
+        if (bpm === 0)
+            return;
+
+        this.metroIterval = setInterval(
+            this.tick,
+            1000 / (bpm / 60));
+        this.setState({bpm})
+    };
+
+    tick = () => {
+        let circle = document.getElementById('metronomeCircle');
+        if (circle.style.backgroundColor ==='red')
+            circle.style.backgroundColor = 'white';
+        else
+            circle.style.backgroundColor = 'red';
+
+
+            playAudio('metronomeAudio');
+    }
+
+    render = () => {
+        return (<div>
+            <audio src={metronome} id='metronomeAudio'/>
+            <input type='checkbox' onClick={() => this.setState({enabled: !this.state.enabled})} />
+            Metronome. BPM: {this.state.bpm}
+            <br/>
+            {this.state.enabled && <input type='range' max='300' min='0' onChange={this.changeMetroPace}/>}
+            <div id='metronomeCircle' />
+        </div>)
+    }
+}
 
 class App extends Component {
 
@@ -147,6 +194,7 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
+                <Metronome/>
             </div>
         );
     }
