@@ -57,6 +57,8 @@ const displayDrumMsg = (drumName) => {
 
 const playAudio = (id) => {
     let audio = document.getElementById(id);
+    audio.pause();
+    audio.currentTime = 0;
     audio.play();
 };
 
@@ -77,9 +79,6 @@ const messageReducer = (state = defaultState, action) => {
 const store = createStore(messageReducer);
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleDrumClick = (ev) => {
         let code = ev.target.firstChild.textContent;
