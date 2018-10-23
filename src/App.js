@@ -63,6 +63,20 @@ const playAudio = (id) => {
     audio.play();
 };
 
+const animateDrumButton = (id) => {
+    let audio = document.getElementById(id);
+    let div = audio.parentElement;
+    div.animate([
+        // keyframes
+        {transform: 'translateY(0px)'},
+        {transform: 'translateY(-50px)'}
+    ], {
+        // timing options
+        duration: 200,
+        iterations: 1
+    });
+};
+
 const defaultState = {drumDisplay: ''};
 
 const messageReducer = (state = defaultState, action) => {
@@ -71,6 +85,7 @@ const messageReducer = (state = defaultState, action) => {
             return Object.assign({}, state, {drumDisplay: action.drumName});
         case PLAYDRUM:
             playAudio(action.drumCode);
+            animateDrumButton(action.drumCode);
             break;
         default:
             break;
@@ -104,23 +119,23 @@ class Metronome extends Component {
 
     tick = () => {
         let circle = document.getElementById('metronomeCircle');
-        if (circle.style.backgroundColor ==='red')
+        if (circle.style.backgroundColor === 'red')
             circle.style.backgroundColor = 'white';
         else
             circle.style.backgroundColor = 'red';
 
 
-            playAudio('metronomeAudio');
-    }
+        playAudio('metronomeAudio');
+    };
 
     render = () => {
         return (<div>
             <audio src={metronome} id='metronomeAudio'/>
-            <input type='checkbox' onClick={() => this.setState({enabled: !this.state.enabled})} />
+            <input type='checkbox' onClick={() => this.setState({enabled: !this.state.enabled})}/>
             Metronome. BPM: {this.state.bpm}
             <br/>
             {this.state.enabled && <input type='range' max='300' min='0' onChange={this.changeMetroPace}/>}
-            <div id='metronomeCircle' />
+            <div id='metronomeCircle'/>
         </div>)
     }
 }
