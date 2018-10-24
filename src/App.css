@@ -6,6 +6,16 @@
   color: #61dafb;
 }
 
+#drum-machine {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -200px;
+    margin-left: -200px;
+    width: 400px;
+    height: 400px;
+}
+
 #display {
     border-style: solid;
     height: 100px;

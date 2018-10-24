@@ -134,10 +134,17 @@ class Metronome extends Component {
         playAudio('metronomeAudio');
     };
 
+    triggerMetronome = () => {
+        let newStatus = !this.state.enabled;
+        this.setState({enabled: newStatus});
+        if (!newStatus)
+            clearInterval(this.metroIterval);
+    }
+
     render = () => {
         return (<div>
             <audio src={metronome} id='metronomeAudio'/>
-            <input type='checkbox' onClick={() => this.setState({enabled: !this.state.enabled})}/>
+            <input type='checkbox' onClick={this.triggerMetronome}/>
             Metronome. BPM: {this.state.bpm}
             <br/>
             {this.state.enabled && <input type='range' max='300' min='0' onChange={this.changeMetroPace}/>}
@@ -214,8 +221,8 @@ class App extends Component {
                             <audio className='clip' id='C' src={tamp}/>
                         </div>
                     </div>
+                    <Metronome/>
                 </div>
-                <Metronome/>
             </div>
         );
     }
