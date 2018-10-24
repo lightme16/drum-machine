@@ -14,7 +14,7 @@ import metronome from './samples/metronome_tick.wav';
 import {Provider, connect} from 'react-redux'
 import {createStore} from 'redux'
 
-const colors = ['red', 'green', 'blue', 'black'];
+const colors = ['red', 'green', 'blue', 'yellow', 'cyan', 'orange'];
 const keyCodes = {
     '81': 'Q',
     '87': 'W',
@@ -43,6 +43,8 @@ const keys2Names = {
 
 const PLAYDRUM = 'play_drum';
 const DISPLAYDRUM = 'display_drum';
+const CHANGESHADOW = 'changeShadow';
+const ANIMATEBUTTON = 'animateButton'
 
 const playDrumMsg = (drumCode) => {
     return {
@@ -57,6 +59,18 @@ const displayDrumMsg = (drumName) => {
     }
 };
 
+const changeShadowMsg = () => {
+    return {
+        type: CHANGESHADOW
+    }
+};
+
+const animateButtonMsg = (buttonId) => {
+    return {
+        type: ANIMATEBUTTON,
+        buttonId
+    }
+};
 const playAudio = (id) => {
     let audio = document.getElementById(id);
     audio.pause();
@@ -84,6 +98,23 @@ const animateDrumButton = (id) => {
     });
 };
 
+const changeShadow = () => {
+    let drum = document.getElementById('drum-machine');
+    drum.animate([
+        // keyframes
+        {
+            boxShadow: '5px 5px ' + colors[Math.floor(Math.random() * colors.length)]
+        },
+        {
+            boxShadow: '5px 5px black'
+        }
+    ], {
+        // timing options
+        duration: 200,
+        iterations: 1
+    });
+};
+
 const defaultState = {drumDisplay: ''};
 
 const messageReducer = (state = defaultState, action) => {
@@ -92,7 +123,12 @@ const messageReducer = (state = defaultState, action) => {
             return Object.assign({}, state, {drumDisplay: action.drumName});
         case PLAYDRUM:
             playAudio(action.drumCode);
-            animateDrumButton(action.drumCode);
+            break;
+        case ANIMATEBUTTON:
+            animateDrumButton(action.buttonId);
+            break;
+        case CHANGESHADOW:
+            changeShadow();
             break;
         default:
             break;
@@ -124,14 +160,9 @@ class Metronome extends Component {
         this.setState({bpm})
     };
 
-    changeShadow = () => {
-        let drum = document.getElementById('drum-machine');
-        drum.style.boxShadow = '5px 5px ' + colors[Math.floor(Math.random() * colors.length)];
-    };
-
     tick = () => {
-        this.changeShadow();
-        playAudio('metronomeAudio');
+        this.props.playCallback('metronomeAudio');
+        this.props.changeShadow();
     };
 
     triggerMetronome = () => {
@@ -225,7 +256,7 @@ class App extends Component {
                             <audio className='clip' id='C' src={tamp}/>
                         </div>
                     </div>
-                    <Metronome/>
+                    <Metronome playCallback={this.props.playDrum} changeShadow={this.props.changeShadow} />
                 </div>
             </div>
         );
@@ -241,9 +272,14 @@ const mapDispatchToProps = (dispatch) => {
     return {
         playDrum: (drumCode) => {
             dispatch(playDrumMsg(drumCode));
-            let drumName = keys2Names[drumCode];
-            if (drumName)
-                dispatch(displayDrumMsg(drumName))
+            if (drumCode in keys2Names) {
+                dispatch(displayDrumMsg(keys2Names[drumCode]));
+                dispatch(animateButtonMsg(drumCode));
+                dispatch(changeShadowMsg());
+            }
+        },
+        changeShadow: () => {
+            dispatch(changeShadowMsg());
         }
     }
 };
