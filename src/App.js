@@ -14,6 +14,7 @@ import metronome from './samples/metronome_tick.wav';
 import {Provider, connect} from 'react-redux'
 import {createStore} from 'redux'
 
+const colors = ['red', 'green', 'blue', 'black'];
 const keyCodes = {
     '81': 'Q',
     '87': 'W',
@@ -106,7 +107,7 @@ class Metronome extends Component {
         this.metroIterval = null;
         this.state = {
             enabled: false,
-            bpm: 'disabled'
+            bpm: 0
         }
     }
 
@@ -114,7 +115,7 @@ class Metronome extends Component {
         clearInterval(this.metroIterval);
 
         let bpm = ev.target.value;
-        if (bpm === 0)
+        if (bpm === '0')
             return;
 
         this.metroIterval = setInterval(
@@ -123,14 +124,13 @@ class Metronome extends Component {
         this.setState({bpm})
     };
 
+    changeShadow = () => {
+        let drum = document.getElementById('drum-machine');
+        drum.style.boxShadow = '5px 5px ' + colors[Math.floor(Math.random() * colors.length)];
+    };
+
     tick = () => {
-        let circle = document.getElementById('metronomeCircle');
-        if (circle.style.backgroundColor === 'red')
-            circle.style.backgroundColor = 'white';
-        else
-            circle.style.backgroundColor = 'red';
-
-
+        this.changeShadow();
         playAudio('metronomeAudio');
     };
 
@@ -139,18 +139,24 @@ class Metronome extends Component {
         this.setState({enabled: newStatus});
         if (!newStatus)
             clearInterval(this.metroIterval);
-    }
+    };
 
     render = () => {
-        return (<div>
+        return (<div id='metronome'>
             <audio src={metronome} id='metronomeAudio'/>
             <input type='checkbox' onClick={this.triggerMetronome}/>
-            Metronome. BPM: {this.state.bpm}
+            <label>Metronome. BPM: {this.state.bpm}</label>
             <br/>
             {this.state.enabled && <input type='range' max='300' min='0' onChange={this.changeMetroPace}/>}
             <div id='metronomeCircle'/>
         </div>)
     }
+}
+
+function Display(props) {
+    return (<div id="display">
+        <h2>{props.content}</h2>
+    </div>)
 }
 
 class App extends Component {
@@ -180,9 +186,7 @@ class App extends Component {
         return (
             <div className='App'>
                 <div id="drum-machine">
-                    <div id="display">
-                        <h2>{this.props.state.drumDisplay}</h2>
-                    </div>
+                    <Display content={this.props.state.drumDisplay}/>
                     <div className='drum-pads'>
                         <div className='drum-pad' onClick={this.handleDrumClick}>
                             Q
