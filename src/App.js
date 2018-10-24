@@ -68,8 +68,14 @@ const animateDrumButton = (id) => {
     let div = audio.parentElement;
     div.animate([
         // keyframes
-        {transform: 'translateY(0px)'},
-        {transform: 'translateY(-50px)'}
+        {
+            transform: 'translateY(0px)',
+            backgroundColor: 'red'
+        },
+        {
+            transform: 'translateY(-10px)',
+            backgroundColor: 'blue'
+        }
     ], {
         // timing options
         duration: 200,
