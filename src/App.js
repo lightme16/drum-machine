@@ -177,7 +177,6 @@ class Metronome extends Component {
             <audio src={metronome} id='metronomeAudio'/>
             <input type='checkbox' onClick={this.triggerMetronome}/>
             <label>Metronome. BPM: {this.state.bpm}</label>
-            <br/>
             {this.state.enabled && <input type='range' max='300' min='0' onChange={this.changeMetroPace}/>}
             <div id='metronomeCircle'/>
         </div>)
@@ -217,6 +216,7 @@ class App extends Component {
         return (
             <div className='App'>
                 <div id="drum-machine">
+                    <h2 id='drum-label'>Beat Master 3000</h2>
                     <Display content={this.props.state.drumDisplay}/>
                     <div className='drum-pads'>
                         <div className='drum-pad' onClick={this.handleDrumClick}>
