@@ -44,7 +44,7 @@ const keys2Names = {
 const PLAYDRUM = 'play_drum';
 const DISPLAYDRUM = 'display_drum';
 const CHANGESHADOW = 'changeShadow';
-const ANIMATEBUTTON = 'animateButton'
+const ANIMATEBUTTON = 'animateButton';
 
 const playDrumMsg = (drumCode) => {
     return {
@@ -167,9 +167,13 @@ class Metronome extends Component {
 
     triggerMetronome = () => {
         let newStatus = !this.state.enabled;
-        this.setState({enabled: newStatus});
-        if (!newStatus)
+        let newState = {enabled: newStatus};
+        if (!newStatus) {
             clearInterval(this.metroIterval);
+            newState.bpm = '0'
+        }
+        this.setState(newState);
+
     };
 
     render = () => {
@@ -256,7 +260,7 @@ class App extends Component {
                             <audio className='clip' id='C' src={tamp}/>
                         </div>
                     </div>
-                    <Metronome playCallback={this.props.playDrum} changeShadow={this.props.changeShadow} />
+                    <Metronome playCallback={this.props.playDrum} changeShadow={this.props.changeShadow}/>
                 </div>
             </div>
         );

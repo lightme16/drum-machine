@@ -46,5 +46,7 @@
 
 #metronome {
     padding-top: 1%;
+    display: flex;
+    justify-content: center;
 }
 
