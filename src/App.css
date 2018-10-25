@@ -8,6 +8,7 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: #F0E7D8;
 }
 
 code {
@@ -24,6 +25,7 @@ code {
 }
 
 #drum-machine {
+    background: #FB5012;
     border-style: solid;
     box-shadow: 5px 5px black;
     position: absolute;
@@ -41,6 +43,7 @@ code {
 }
 
 #display {
+    background: #E9DF00;
     margin: 0 12px 12px 12px;
     border-style: solid;
     height: 100px;
@@ -60,6 +63,7 @@ h2 {
 
 .drum-pad {
     border-style: solid;
+    border-width: thin;
     text-align: center;
     padding: 20px;
 }

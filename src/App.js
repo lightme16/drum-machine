@@ -14,7 +14,7 @@ import metronome from './samples/metronome_tick.wav';
 import {Provider, connect} from 'react-redux'
 import {createStore} from 'redux'
 
-const colors = ['red', 'green', 'blue', 'yellow', 'cyan', 'orange'];
+const colors = ['red', '#03FCBA', '#E9DF00', '#01FDF6', '#01FDF6', '#F0E7D8'];
 const keyCodes = {
     '81': 'Q',
     '87': 'W',
@@ -85,11 +85,11 @@ const animateDrumButton = (id) => {
         // keyframes
         {
             transform: 'translateY(0px)',
-            backgroundColor: 'red'
+            backgroundColor: '#E9DF00'
         },
         {
             transform: 'translateY(-10px)',
-            backgroundColor: 'blue'
+            backgroundColor: '#F0E7D8'
         }
     ], {
         // timing options
